@@ -1,0 +1,31 @@
+@startuml
+
+package bootstrap {
+    class Bootstrap {
+    }
+
+    class HaltCommand {
+    }
+}
+
+package command {
+    class AbstractCommand
+}
+
+package net {
+    class AbstractConsumer
+    interface Inject<E>
+}
+
+package plug {
+    interface Pluggable
+}
+
+Bootstrap --|> AbstractConsumer
+Bootstrap ..|> Inject
+Bootstrap ..|> Pluggable
+
+HaltCommand --|> AbstractCommand
+HaltCommand ..> Bootstrap
+
+@enduml
