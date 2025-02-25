@@ -45,3 +45,37 @@ Company information:
 - Random seat assigning, seat reservation (isn’t charged)
 - Employee, sales manager can
 - Ticket price isn’t based on customer info (age etc.)
+
+
+
+
+19.02 Second Interview 
+ 
+Usage Only employees from Company , Desktop Application
+ 
+Account manager, sales employee, sales manager, IT (Admin)
+ 
+Sales employee: search (best) trips, looking at number of seats, reservation of booking —also cancellation (seats should be released again)—
+-cancellation should be made as a whole process (all tickets, trips should be cancelled at once)
+-cancellation should be remembered in the system; not deleted
+-refund policy managed by company
+ 
+Sales manager: prices (distance calculation, additional prices for seasons/holidays)-also responsible for all discounts
+ 
+-ticket booking process using time outs (10 min or more?)
+ 
+-management/creation of roles (account manager: management dashboard)
+-tickets sold by employees (also which trips are sold the most (Austia, Australia, Asia etc.); dashboard/graphical); kilometers travelled in general; GENERAL OVERVIEW
+-profits, number of sales , kilometers travelled
+ 
+ 
+Information about customer
+ 
+Recurrent customer (discounts)
+-person who’s making bookings & traveler —no storing of bank info (payment process is not part of system) —booking reservation until payment
+-no fixed prices (sales manager should be able to decide)
+-dynamic (early bird, last minute …)
+-static (distance “price per kilometer”, times price, holiday …)
+(-loyalty discount through manager/employee)
+-if customer change the booking, the current price is applied (customer pays new price)
+-tickets: Business/Economy
