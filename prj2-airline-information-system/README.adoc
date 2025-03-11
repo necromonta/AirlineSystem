@@ -1,0 +1,347 @@
+:imagesdir: images/
+ifdef::env-github[]
+:imagesdir: images/
+endif::[]
+
+== Setup a layered architecture for your project
+
+This is the documentation for the backend, for the frontend see link:frontend/README.md[frontend]
+
+== Introduction
+
+This tutorial describes how to setup a layered architecture for your project.
+Before answering the question *HOW* to do that, we should ask ourselves the question
+*WHY* we would do that! An important principle in general, but definitely also in
+Software Engineering is the KISS-principle: **K**eep **I**t **S**tupid and **S**imple. Things that are simple are less error prone, easier to verify and can be easily understood by others as well.
+Making our architecture more complex is therefore only reasonable if it serves a
+purpose.
+
+== Our goals
+
+What do we want to achieve with a proper project architecture?
+
+* Separation of Concerns
+
++
+--
+Each part (component) of a software has an own and preferably single responsibility.
+Benefits: that component can be more easily re-used for that single responsibility and that part can be developed
+by an expert (e.g. user interface developers are different from so called back-end developers). Finally, the components
+can  be developed independent from each other, as long as the way they should communicate with each other is clearly defined.
+--
++
+
+* Testable code
+
++
+--
+Tests and test-driven development make sure that what is developed is based on the defined requirements, and not
+more than that. The other way around, tests give a certain level of confidence that the implementation does what
+it should do. When software components use other services (Dependent-On-Components, DOC), we typically don't want to
+test the whole chain at once. We want to test that component (the System Under Test, SUT) in isolation. From test-
+perspective, we have to be able to replace the DOC's by something that the tester has completely in control. We want
+to test the component itself and its interaction with the DOC's, not the DOC's themselves.
+--
++
+
+
+* Re-usable code
+
++
+--
+One of the idea's of Object Oriented software development is the development of re-usable components. If you have
+well-tested re-usable components available, why reinvent the wheel? Furthermore, re-usable code avoids duplication
+of code. You might know the *DRY* design principle **D**on't **R**epeat **Y**ourself. From the databases course, you must
+have learned that redundancy might lead to inconsistencies.
+--
++
+
+* Maintainable code
+
++
+--
+All the above mentioned goals have to do with software quality. Maintainable code is readable, testable, re-usable and
+also very important easily extendible. Software changes are risks; how can we minimize these risks? Because one thing is
+sure, software systems will change over time. But also here some relativity: don't use a sledgehammer to crack a nut.
+Maintainability becomes more important when software becomes bigger, more people are involved, the expected live-time
+is longer, and the number of expected changes and / or extensions becomes bigger.
+--
++
+
+
+== Our design starting points
+
+* A layered architecture that addresses the concerns:
+
+ ** *RestAPI Layer* - Presenting information and interact with external systems (such as a web page)
+ ** *Business Logic API Layer* - Interface to the Business Logic Layer 
+ ** *Business Logic Layer* - Modeling the real world, the business and its business rules in a
+ ** *Persistence API Layer* - Interface to the Persistence Layer
+ ** *Persistence Layer* - For Storing data
+ ** *Assembler Layer* - To wire up the layers and to provide the entry point of the application
+
+* Program against interfaces, instead of implementations
+
++
+--
+It's often not necessary to know
+the implementation to be able to use it. Think about you driving a car. That's perfectly
+possible without knowing how it works, but by only knowing its interface (steering wheel, pedals, gear)
+and how to use that. Benefit is that you can drive other car implementations with that same
+interface without any problem. The implementation is interchangeable.
+--
++
+
+* Use factory classes to create instances
+
++
+--
+To create objects (instances) of a type (so always when using the *new* keyword), we need to know the
+actual concrete type (the implementation). That causes dependency. Try to do the creation of objects in
+separate classes, called factory classes.
+--
++
+
+Design principles are mostly focussed on avoiding dependency. But isn't that very logical? In
+real life, we also want to avoid dependency. Dependency causes complexity, independency gives
+freedom! When you have a job, you're married, have children, you have dependencies and
+responsibilities that restrict freedom. Why did UK think that leaving the EU was a good idea? Too much dependency can even cause that rules are set FOR you! Independency is therefore
+persuable. But is avoiding dependency always a good idea? It comes with a price (its own complexities)
+as well. Moral of the story? We have to find a balance between making things flexible but still simple.
+
+
+
+== Let's set it up
+
+[TIP]
+====
+With the demo application in this repository, you have received a (hopefully) working starting point for your project. HOWEVER... it is important is that you are able to setup a project yourself as well. Therefore, the tutorial below describes the way to do it. *We highly recommend that each group tries to setup a working project architecture themselves.* Afterwards, you can start together from scratch again, having gained relevant knowledge. The paragraphs below don't contain all the details; these can be looked up in the example implementation however. Okay, here we go...
+====
+
+*What's key? Our Business Logic of course!* The persistence layer is only a service that serves the Business Logic Layer by storing object data at any time, and retrieving these on request. From a business point of view not important. The (G)UI or RESTAPI only enables end users to interact with the business logic. From that perspective it's only a passthrough and a messenger; relevant from a software system
+point of view, not from a business point of view. Assume that we want to write an application that is
+able to create, store and retrieve customers. We'll explain the setup step-by-step afterwards.
+
+* Create a Maven project, either:
+    - in your IDE
+        -- In for example NetBeans, choose 'Java with Maven' and 'POM project' as project type.
+    - via the command line using `mvn archetype:generate` - see https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+
++
+--
+This Project will be your overall application, let's call it AirlineInformationSystem (AIS). This AIS will be the parent of all your sub
+projects that we'll create on the fly. A Maven project can be recognized by its pom.xml (POM = Project Object Model). This file contains all the settings of your project.
+
+Within this project you can create so-called modules, which are *Maven Modules*. This comes with some benefits:
+
+* All sub projects (Maven modules) will have this project as parent and inherit general settings. Open the POM file of your AIS-project and set the informaticspom as its parent-pom; make sure your pom-file looks like the one below. All libraries that are accessible via the informaticspom will from now be available in all future sub projects.
+
+.pom-file in order to have informaticspom as parent
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.fontysvenlo</groupId>
+        <artifactId>informaticspom</artifactId>
+        <version>1.5</version>
+        <relativePath/>
+    </parent>
+    <groupId>nl.fontys.ais</groupId>
+    <artifactId>airlineinformationsystem</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>AirlineInformationSystem</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+</project>
+----
+
+* Your complete software including all its modules can now be build with one single Maven command (in your root project), with additional benefit that Maven will take care of the proper build-order (in case of dependencies).
+* All your sub projects will be created in sub directories of this AIS-project, avoiding having projects defined in different locations.
+
+[TIP]
+This structure is sometimes also referred to as a *monorepo* (https://en.wikipedia.org/wiki/Monorepo). It has the advantage that all projects can be managed and versioned together in one repository, while still being able to build and test them separately. This is especially useful when you have a lot of projects that are closely related.
+
+--
++
+
+* Business is key! Create a business logic module within the AIS-project.
++
+--
+In NetBeans, Right-click the Modules folder and select 'Create new Module' and choose 'Java Application' as project type.
+A regular project is created. This project acts as *business logic layer*. What do we need in this layer? Business classes (representing entity types from your domain model!) and classes to manage objects of these
+classes:
+
+* Test classes... Of course your business logic should be tested and you'll use a test-first approach. BusinessLogic tests will be part of this module (to keep this tutorial short, testing has been left out though; the demo project contains some example tests).
+* A Customer class to represent a real world Customer (assuming this is part of your domain).
+* A CustomerManager class that is able to create / deal with new Customer objects and to store (add) these somehow, for example
+in a field of type List. This way, the CustomerManager can deliver a list of all customers as well. So, the
+CustomerManager provides sevices to other classes. For this moment, it contains an in-memory database (List). That might
+be a bad idea later on, when we use a relational database to store our customer information, but it's fine for now.
+--
++
+
+image::AISClassDiagram1.svg[Class diagram after 1st step]
+
+* Time to interact! Create the RestAPI module. For the RestAPI, to work with the server, we use the Javalin framework. This module will act as *RestAPI Layer*.
+
++
+--
+
+[TIP]
+====
+Whenever using a framework, make sure to check the documentation of that framework. In this case, the Javalin documentation can be found at https://javalin.io/documentation.
+Also consider the version of the framework you are using and that the version of the documentation is the same.
+
+The reason for using Javalin, is that it is lightweight and simplifies the creation of a RESTful API. It is not the only framework that can be used for this purpose, but it is a good choice for ours.
+====
+
+Create a new module in your AIS-project, and add a dependency to the Javalin framework. This can be done by adding it as a dependency to the pom.xml of the RestAPI module:
+
+.pom-file
+[source,xml]
+<dependencies>
+    <dependency>
+        <groupId>io.javalin</groupId>
+        <artifactId>javalin-bundle</artifactId>
+        <version>6.4.0</version>
+    </dependency>
+</dependencies>
+--
+
++
+
+image::AISClassDiagram2.svg[Class diagram after 2nd step]
+
+* Define the BusinessLogic API.
+
++
+--
+Time to wire up things. How could we enable the RestAPI layer to communicate with the BusinessLogic layer? Or the other way around?
+Should they know each other? The business layer, the core of your application, should be unaware of the presentation layer (a RestAPI, a GUI)
+Normally, the RestAPI will trigger the interaction with the BusinessLogic. Therefore it should at least know how to talk to it, so knowing its interface. The BusinessLogic does not need to know anything about the RestAPI!
+It normally answers RestAPI questions in a Request-Response fashion. There could be multiple presentation forms for the business logics.
+We might need to add or change to a GraphQL API, gRPC or something that doesn't exist yet. Or make it a standalone application with JavaFX. Why would the Business Logic worry?!
+
+So, the RestAPI is a component that uses the BusinessLogic, making the BusinessLogic a Dependent-On-Component (DOC). But we want the RestAPI to be testable without the details of the BusinessLogic, and we want the BusinessLogic to be testable without the details of the RestAPI. We can do by injecting the BusinessLogic into the RestAPI. The RestAPI should only know the interface of the BusinessLogic, not the actual implementation. This way, we we can test the RestAPI with a mock implementation of the BusinessLogic.
+
+Create a new module in your AIS-project called businesslogic-api. This module will only contain interfaces! Make sure that your REST API module knows the BusinessLogic API by adding a dependency. In any editor, add the dependency to the pom.xml file of the `RestAPI` project:
+
+.pom-file
+[source,xml]
+<dependencies>
+    <dependency>
+        <groupId>nl.fontys.ais</groupId>
+        <artifactId>businesslogic-api</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+
+Also make sure to add this dependency to the BusinessLogic module, since the implementation should know which interfaces to implement.
+
+The BusinessLogic module should define its interface. You can imagine that it, on request, returns a CustomerManager.
+For example a web GUI (via its REST API) could request a CustomerManager object to do its interaction with the BusinessLogic. Via the CustomerManager,
+the REST API gains access to the Customer type as well. This is fine, though layers should be careful to expose their private parts, concrete implementations.
+--
+
+--
+
+* Setup a datarecords module.
+
++
+The demo-implementation uses a data records approach. Each entity class (Customer for example) encapsulates a data record field (of type CustomerData in our example) and business logic. Data records are java _record_ types, that are immutable data carrier objects that are available in all layers of your application. To make them available,
+we encapsulate them in a separate new module of our AIS-project. So, within your AIS-project, create a new module 'DataRecords' that is of type 'Java Application' again. Let the BusinessLogic-layer, the BusinessLogic-API-layer and the RestAPI-layer depend on this new module.
+
+--
+
+* The Assembler module; connect the REST APIServer to the BusinessLogic implementation via the BusinessLogic API.
+
++
+
+--
+
+We need an extension to our design: we need something that acts as the starting point of our application, that starts the server, a 'main' method. Lets call this our 'Assembler'. The Assembler wires up the REST API with the BusinessLogic implementation via the BusinessLogic API. Create an Assembler module in your AIS-project and add dependencies to the modules: BusinessLogic, BusinessLogic-API and the RESTAPI. 
+
+Responsibility of the Assembler is to setup layers and to connect them. Somehow, the `Assembler` must get an implementation of the `BusinessLogic` API. The BusinessLogic should provide this but should also be careful to expose this private part. Therefore, in the BusinessLogic layer, we create a new class called `BusinessLogicFactory`. This factory class with a static method 'getInstance()' returns an object that
+is an implementation of the `BusinessLogic` API. Afterwards, the Assembler creates an instance of a javalin server app and passes the just retrieved
+`BusinessLogic` API object as parameter (dependency injection).
+--
++
+
+* Give REST resources access to the Business Logic.
+
++
+--
+Our REST `APIServer` is responsible for setting up the server and handling HTTP requests.  To make the handling of requests more manageable (and testable), we create a new class called `CustomerResource`. This class is responsible for handling requests related to customers. It has a constructor that takes a `CustomerManager` object as parameter. The APIServer got the BusinessLogic injected. It can create a new instance of the `CustomerResource` and pass the `CustomerManager` object to it.
+
+[NOTE]
+For convenience, we implemented our `CustomerResource` using the `CrudHandler`` - https://javalin.io/documentation#handler-groups - provided by Javalin.
+
+--
++
+
+image::AISClassDiagram3.svg[Class diagram after 3rd step]
+
+* Setup the persistence layer.
+
++
+--
+We currently have a working application with an in-memory database. What we need is a persistence layer that is able to store
+and retrieve data on a longer term as well. Different ways to do this could be chosen, like using a relational database, or
+simply XML- or JSON files. Regardless of the storage type that is chosen, the BusinessLogic uses the persistence layer as a service.
+A Dependent-On-Component again! (compare to the REST API that depends on the BusinessLogic API). But it shouldn't create
+this service itself! If it would do, the BusinessLogic would be tightly coupled. When we do testing, there is no way to
+test the interaction with the Persistence layer without using the real implementation of that Persistence layer. The BusinessLogic
+should only talk to the Persistence interface (let's call it the Persistence API) and get an actual implementation injected. (History repeats itself!) The Persistence layer should act as service for the BusinessLogic exactly like the BusinessLogic layer acts as service
+for the RestAPI-layer. The `Assembler` can inject the Persistence API implementation in the BusinessLogic. The persistence layer does not
+need to have any knowledge of the BusinessLogic layer. We create a new module `persistence-api` in the AIS-project. In this module, we create the Persistence API interface, and the CustomerRepository interface. Next, we create another new module in the AIS-project being the `persistence` module. This module contains the actual persistence implementations, and a PersistenceFactory to create an implementation object. We make sure that both BusinessLogic and Persistence depend on the Persistence-API. 
+
+Be careful, two details we should take care of:
+
+* The BusinessLogic layer now depends on the persistence-API-layer (the BusinessLogic project has the Persistence-API-project as a dependency).
+This is fine.
+
+* Since we have a persistence layer now, we should avoid having an in-memory database at the same time. This will cause issues,
+since it's difficult to keep your in-memory database always exactly in sync with your on-disk storage. Therefore remove the
+cache function from the `CustomerManagerImpl` class.
+
+--
++
+
+image::AISClassDiagram4.svg[Final class diagram]
+
+
+=== DBConfig, ServerConfig
+The way the persistence layer is different from the business layer, is that our persistence layer is dependent on the environment it runs in. The persistence layer needs to know how to connect to the database. This is typically done by providing a configuration file. In the PersistenceAPIImpl class, we create a record called `DBConfig` that we can pass into the Factory to provide the layer with necessary information to connect to the database(s).
+In a similar way the RestAPI can be configured by providing a `ServerConfig` record.
+On application-level, a common way of storing known configurations is to use a .properties file. So our Assembler will be responsible for reading this file and passing it in a structured way into the REST API Layer.
+
+== Some remarks...
+
+* *This architectural setup acts as a starting point*, addressing some issues that you definitely
+will run into when you start setting up an architecture yourself. This example architecture is not completely
+optimized yet. You'll typically notice that the services offered by both the persistence layer as the business
+logic layer could be made more generic. Furthermore, you will discover that you will have to make additional choices along the way.
+
+* The Factory interfaces in both the BusinessLogic and the Persistence layer could be provided with additional
+parameters to influence which specific implementation is returned. The demo implementation does not use this feature yet.
+
+* As mentioned already in the remarks above, the persistence layer could be setup in a more generic way. When you don't do that,
+you'll notice that there will be a lot of duplicated code (at least almost the same) in the different Repository classes
+(e.g. CustomerRepository, FlightRepository etc.). First step is to move some code to a shared abstract super class, then
+you might want to make it more generic using Generic Types, and at some point you might consider using reflection to automatically
+get an objects' fields, their data types and their values (typical things you need to store and retrieve data from a database).
+Goal is to end up with less and well readable and well testable code. Allow yourself to further optimize your implementation step-by-step. Don't worry, refactoring is often necessary: https://youtube.com/watch?v=vqEg37e4Mkw&feature=share[Martin Fowler on refactoring]
+
+* In the demo project, we've added example tests. It's up to you to add more tests on different layers.
+    - The Assembler layer - has an example integrated test, that uses a real database (using testcontainers - https://testcontainers.com/) and starts the server in a thread and then tests it via HTTP requests (using RestAssured - https://rest-assured.io/). NOTE: the demo project uses hard-coded values and doesn't connect with the actual database yet. You might want to seed the database later on (using `.withInitScript()` in the testcontainers setup).
+    - The Persistence layer - Similar to the Assembler layer test, but without a server and business logic. It tests the actual implementation of the Persistence layer.
+    - The REST API layer - has an example test, in isolation, shows you how to test the behavior of the resource, without testing the actual implementation of the BusinessLogic layer.
+    - The DataRecords - DataRecords themselves have no behavior, which is an argument for not testing them (directly).
+    - The Business Layer - The demo project does not contain tests for the BusinessLogic layer. This is something you should add yourself.
+
+
+* There is file `.github/workflows/verify.yml`, which contains a GitHub Actions workflow that runs the tests on every push to the repository. This is a good practice to ensure that your code is always in a working state. You can find more information about GitHub Actions at https://docs.github.com/en/actions.
