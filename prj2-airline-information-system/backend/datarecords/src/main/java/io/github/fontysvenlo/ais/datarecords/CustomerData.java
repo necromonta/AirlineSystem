@@ -11,4 +11,4 @@ import java.time.LocalDate;
  * @param lastName the last name of the customer
  * @param dateOfBirth the date of birth of the customer
  */
-public record CustomerData(Integer id, String firstName, String lastName, LocalDate dateOfBirth) { }
+public record CustomerData(Integer id, String firstName, String lastName, LocalDate dateOfBirth,String phoneNumber,String paymentInfo) { }

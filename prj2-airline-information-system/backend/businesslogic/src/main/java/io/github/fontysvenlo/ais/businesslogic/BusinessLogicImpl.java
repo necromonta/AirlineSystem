@@ -27,4 +27,6 @@ class BusinessLogicImpl implements BusinessLogic {
     public CustomerManager getCustomerManager() {
         return new CustomerManagerImpl(persistenceAPI.getCustomerRepository());
     }
+
+    
 }
