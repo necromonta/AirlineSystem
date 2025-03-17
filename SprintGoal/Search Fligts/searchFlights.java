@@ -27,6 +27,9 @@ class FlightSearch {
         flights = new ArrayList<>();
         flights.add(new Flight("AA101", "New York", "Los Angeles", "10:00 AM"));
         flights.add(new Flight("CA303", "Amsterdam", "London", "3:45 PM"));
+        flights.add(new Flight("BA403", "Berlin", "Munich", "4:15 PM"));
+        flights.add(new Flight("CI303", "Pisa", "Thessaloniki", "6:45 PM"));
+        flights.add(new Flight("MA502", "Brussels Charleroi", "Pisa", "8:00 AM"));
     }
 
     public List<Flight> searchFlights(String origin, String destination) {
