@@ -46,7 +46,10 @@ public class APIServer {
         });
 
         app.get("/" ,ctx -> ctx.result("HAha"));
+        //app.get("/" ,ctx -> ctx.result("Hello World!"));
 
         app.start(configuration.port());
+
+        
     }
 }

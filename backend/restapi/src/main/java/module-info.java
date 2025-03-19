@@ -9,7 +9,7 @@ module restapi_module {
     requires java.logging;
 
     requires io.javalin;
-    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.core;//copilot said to change it from requires com.fasterxml.jackson.databind;
     requires jdk.compiler;
 
     exports io.github.fontysvenlo.ais.restapi;
