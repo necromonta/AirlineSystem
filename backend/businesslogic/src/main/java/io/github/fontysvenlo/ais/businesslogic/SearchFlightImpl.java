@@ -3,10 +3,11 @@ package io.github.fontysvenlo.ais.businesslogic;
 import java.util.ArrayList;
 import java.util.List;
 
-class FlightSearch {
-    private List<Flight> flights;
 
-    public FlightSearch() {
+public class SearchFlightImpl {
+ private List<Flight> flights;
+
+    public SearchFlightImpl() {
         flights = new ArrayList<>();
         flights.add(new Flight("AA101", "New York", "Los Angeles", "10:00 AM"));
         flights.add(new Flight("CA303", "Amsterdam", "London", "3:45 PM"));
