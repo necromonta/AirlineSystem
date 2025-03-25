@@ -1,3 +1,3 @@
 package io.github.fontysvenlo.ais.datarecords;
 
-public record FlightData(Integer flightID, String origin, String destination, Double flightTime) { }
+public record FlightData(String flightID, String origin, String destination,String flightTime) { }
