@@ -1,6 +1,6 @@
 package io.github.fontysvenlo.ais.restapi;
 
-import static io.javalin.apibuilder.ApiBuilder.crud;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 import io.javalin.Javalin;
 import io.github.fontysvenlo.ais.businesslogic.api.BusinessLogic;
@@ -38,6 +38,7 @@ public class APIServer {
             });
             config.router.apiBuilder(() -> {
                 crud("customers/{customer-id}", new CustomerResource(businessLogic.getCustomerManager()));
+                path("/", new FlightResource().routes());
             });
         });
 
