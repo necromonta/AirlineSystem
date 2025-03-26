@@ -35,20 +35,20 @@
 
 <form on:submit|preventDefault={createFlight} class="space-y-4 max-w-md">
     <div>
-        <label>Flight ID</label>
-        <input bind:value={flightID} class="w-full p-2 border rounded" required />
+        <label for="flightID">Flight ID</label>
+        <input id="flightID" name="flightID" bind:value={flightID} class="w-full p-2 border rounded" required />
     </div>
     <div>
-        <label>Origin</label>
-        <input bind:value={origin} class="w-full p-2 border rounded" required />
+        <label for="origin">Origin</label>
+        <input id="origin" name="origin" bind:value={origin} class="w-full p-2 border rounded" required />
     </div>
     <div>
-        <label>Destination</label>
-        <input bind:value={destination} class="w-full p-2 border rounded" required />
+        <label for="destination">Destination</label>
+        <input id="destination" name="destination" bind:value={destination} class="w-full p-2 border rounded" required />
     </div>
     <div>
-        <label>Flight Time</label>
-        <input bind:value={flightTime} class="w-full p-2 border rounded" required />
+        <label for="flightTime">Flight Time</label>
+        <input id="flightTime" name="flightTime" bind:value={flightTime} class="w-full p-2 border rounded" required />
     </div>
 
     <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">

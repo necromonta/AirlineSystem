@@ -2,8 +2,9 @@ package io.github.fontysvenlo.ais.businesslogic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
- public  class FlightSearch {
+public  class FlightSearch {
     private List<Flight> flights;
 
     public FlightSearch() {
@@ -29,4 +30,12 @@ import java.util.List;
      public List<Flight> getAllFlights() {
          return new ArrayList<>(flights);
      }
+    public Flight getFlightById(String flightID) {
+        // Ensure you're correctly finding the flight by its ID
+        return flights.stream()
+                .filter(f -> f.getFlightID().equalsIgnoreCase(flightID))  // Case-insensitive match
+                .findFirst()
+                .orElse(null);  // Return null if flight is not found
+    }
+
 }

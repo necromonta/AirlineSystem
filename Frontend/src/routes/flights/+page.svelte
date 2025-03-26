@@ -1,6 +1,7 @@
 <script>
     import { api } from '$lib/api';
     import { PUBLIC_API_BASE } from '$env/static/public';
+    import {goto} from '$app/navigation'
 
     let origin = '';
     let destination = '';
@@ -14,9 +15,8 @@
         flights = [];
 
         try {
-            const params = new URLSearchParams({ origin, destination });
+            const params = new URLSearchParams({ origin, destination});
             flights = await api.all(`flights/search?${params}`);
-            console.log("Flights:", flights);
         } catch (e) {
             error = e.message;
             console.error("Error fetching flights:", e);
@@ -41,7 +41,14 @@
     <ul class="mt-2 space-y-1">
         {#each flights as flight}
             <li class="bg-gray-100 p-2 rounded">
-                <strong>{flight.flightID}</strong>: {flight.origin} → {flight.destination} at {flight.flightTime}
+                <span>
+                    <strong>{flight.flightID}</strong>: {flight.origin} → {flight.destination} at {flight.flightTime}
+                </span>
+                <button
+                        on:click={() => goto(`/flights/${flight.flightID}`)}
+                        class="ml-4 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+                    See
+                </button>
             </li>
         {/each}
     </ul>
