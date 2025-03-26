@@ -12,3 +12,10 @@ import java.time.LocalDate;
  * @param dateOfBirth the date of birth of the customer
  */
 public record CustomerData(Integer id, String firstName, String lastName, LocalDate dateOfBirth) { }
+/* private String passengerID;
+    private String firstName;
+    private String lastName;
+    private Date dateOfBirth;
+    private String passportNumber;
+    private String email;
+    private String phoneNumber; */
