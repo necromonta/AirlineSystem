@@ -31,6 +31,6 @@ class BusinessLogicImpl implements BusinessLogic {
 
     @Override
     public SearchFlight getSearchFlight() {
-      return new SearchFlightImpl();
+      return (SearchFlight) new SearchFlightImpl();
     }
 }

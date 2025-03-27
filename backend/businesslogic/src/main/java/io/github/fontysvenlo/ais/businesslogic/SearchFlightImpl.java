@@ -3,6 +3,8 @@ package io.github.fontysvenlo.ais.businesslogic;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.fontysvenlo.ais.businesslogic.api.Flight;
+
 
 public class SearchFlightImpl {
  private List<Flight> flights;
