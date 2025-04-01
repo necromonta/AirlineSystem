@@ -46,8 +46,24 @@ public class APIServer {
             ctx.status(422).json(Map.of("error", e.getMessage()));
         });
 
-        app.get("/" ,ctx -> ctx.result("HAha"));
+        
+        app.get("/" ,ctx -> ctx.result("Hello World!"));
 
         app.start(configuration.port());
+
+        // Handle pre-flight OPTIONS request
+        app.options("/api/*", ctx -> {
+            ctx.status(204); // No content response
+        });
+
+        app.get("/flights", ctx -> ctx.result("Flight data response here!"));
+
+        // Endpoint to handle the POST request
+        app.post("/submit", ctx -> {
+            String message = ctx.body();
+            System.out.println("Received message: " + message);
+            ctx.json(new Response(message, "success"));
+        });
     }
+    
 }

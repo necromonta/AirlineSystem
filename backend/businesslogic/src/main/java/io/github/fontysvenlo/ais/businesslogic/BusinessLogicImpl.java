@@ -1,6 +1,7 @@
 package io.github.fontysvenlo.ais.businesslogic;
 
 import io.github.fontysvenlo.ais.businesslogic.api.CustomerManager;
+import io.github.fontysvenlo.ais.businesslogic.api.SearchFlight;
 import io.github.fontysvenlo.ais.businesslogic.api.BusinessLogic;
 import io.github.fontysvenlo.ais.persistence.api.Persistence;
 
@@ -26,5 +27,10 @@ class BusinessLogicImpl implements BusinessLogic {
     @Override
     public CustomerManager getCustomerManager() {
         return new CustomerManagerImpl(persistenceAPI.getCustomerRepository());
+    }
+
+    @Override
+    public SearchFlight getSearchFlight() {
+      return (SearchFlight) new SearchFlightImpl();
     }
 }
