@@ -3,16 +3,17 @@ package io.github.fontysvenlo.ais.restapi;
 import io.javalin.http.Context;
 import io.javalin.apibuilder.EndpointGroup;
 import io.github.fontysvenlo.ais.businesslogic.Flight;
-import io.github.fontysvenlo.ais.businesslogic.FlightSearch;
+import io.github.fontysvenlo.ais.businesslogic.SearchFlightImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class FlightResource {
 
-    private final FlightSearch flightSearch = new FlightSearch();
+    private final SearchFlightImpl flightSearch = new SearchFlightImpl();
 
     public EndpointGroup routes() {
         return () -> {
@@ -32,12 +33,12 @@ public class FlightResource {
             return;
         }
 
-        List<Flight> results = flightSearch.searchFlights(origin, destination);
+        List<io.github.fontysvenlo.ais.businesslogic.api.Flight> results = flightSearch.searchFlights(origin, destination);
         ctx.status(200).json(results);
     }
 
     private void handleCreateFlight(Context ctx) {
-        Flight newFlight =  ctx.bodyAsClass(Flight.class);
+        io.github.fontysvenlo.ais.businesslogic.api.Flight newFlight =  ctx.bodyAsClass((Type) Flight.class);
         flightSearch.addFlight(newFlight);
         ctx.status(201).json(newFlight);
     }
@@ -45,7 +46,7 @@ public class FlightResource {
     private final ObjectMapper mapper = new ObjectMapper();
     private void handleGetAllFlights(Context ctx) {
         try {
-            List<Flight> flights = flightSearch.getAllFlights();
+            List<io.github.fontysvenlo.ais.businesslogic.api.Flight> flights = flightSearch.getAllFlights();
 
             // Log the fetched flight list
             System.out.println("Fetched flights: " + flights);
@@ -71,7 +72,7 @@ public class FlightResource {
         System.out.println("Fetching flight with ID: " + flightID);
 
         // Search for the flight by flightID
-        Flight flight = flightSearch.getFlightById(flightID);
+        io.github.fontysvenlo.ais.businesslogic.api.Flight flight = flightSearch.getFlightById(flightID);
 
         if (flight == null) {
             ctx.status(404).result("Flight not found");

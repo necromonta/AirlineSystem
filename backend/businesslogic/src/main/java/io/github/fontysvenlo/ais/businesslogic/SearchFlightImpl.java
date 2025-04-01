@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-<<<<<<<< HEAD:backend/businesslogic/src/main/java/io/github/fontysvenlo/ais/businesslogic/FlightSearch.java
-public  class FlightSearch {
-    private List<Flight> flights;
-========
+
 import io.github.fontysvenlo.ais.businesslogic.api.Flight;
->>>>>>>> a9cd00ff4cb12718c7e17690ffbf6045620490c4:backend/businesslogic/src/main/java/io/github/fontysvenlo/ais/businesslogic/SearchFlightImpl.java
 
 
 public class SearchFlightImpl {
@@ -31,8 +27,7 @@ public class SearchFlightImpl {
         }
         return results;
     }
-<<<<<<<< HEAD:backend/businesslogic/src/main/java/io/github/fontysvenlo/ais/businesslogic/FlightSearch.java
-     public void addFlight(Flight flight) {
+    public void addFlight(Flight flight) {
          flights.add(flight);
      }
 
@@ -48,6 +43,5 @@ public class SearchFlightImpl {
     }
 
 }
-========
-}
->>>>>>>> a9cd00ff4cb12718c7e17690ffbf6045620490c4:backend/businesslogic/src/main/java/io/github/fontysvenlo/ais/businesslogic/SearchFlightImpl.java
+
+
