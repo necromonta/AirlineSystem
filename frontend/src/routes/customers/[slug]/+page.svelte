@@ -2,6 +2,7 @@
     import {onMount} from "svelte";
     import {api} from "$lib/api.js";
     import { page } from '$app/state';
+    import {PUBLIC_API_BASE} from "$env/static/public";
 
 
     let customer = $state({});
