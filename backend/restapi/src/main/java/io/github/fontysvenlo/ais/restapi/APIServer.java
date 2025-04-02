@@ -1,6 +1,6 @@
 package io.github.fontysvenlo.ais.restapi;
 
-import static io.javalin.apibuilder.ApiBuilder.crud;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 import io.javalin.Javalin;
 import io.github.fontysvenlo.ais.businesslogic.api.BusinessLogic;
@@ -33,11 +33,12 @@ public class APIServer {
             config.router.contextPath = "/api/v1";
             config.bundledPlugins.enableCors(cors -> {
                 cors.addRule(it -> {
-                    it.allowHost("http://localhost:" + configuration.cors(), "127.0.0.1:" + configuration.cors());
+                    it.allowHost("http://localhost:5173");
                 });
             });
             config.router.apiBuilder(() -> {
                 crud("customers/{customer-id}", new CustomerResource(businessLogic.getCustomerManager()));
+                path("/", new FlightResource().routes());
             });
         });
 
