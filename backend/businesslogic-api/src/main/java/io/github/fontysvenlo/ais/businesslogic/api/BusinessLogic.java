@@ -11,4 +11,8 @@ public interface BusinessLogic {
      */
     CustomerManager getCustomerManager();
 
+    FlightManager getFlightManager();
+
+    
+
 }

@@ -22,4 +22,7 @@ public interface Persistence {
     // available to the business logic, e.g. to manage flights:
     //
     //FlightRepository getFlightRepository();
+    default FlightRepository getFlightRepository(){
+        return null;
+}
 }

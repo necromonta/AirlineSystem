@@ -5,7 +5,10 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import io.github.fontysvenlo.ais.datarecords.CustomerData;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -16,8 +19,14 @@ import java.util.Collections;
 class CustomerRepositoryImpl implements CustomerRepository {
     
     private final DataSource db;
-    //private final List<CustomerData> customers = new ArrayList<>(Arrays.asList(new CustomerData(1, "John", "Doe", LocalDate.of(2025, 1, 1)))); 
-    private final List<CustomerData> customers = new ArrayList<>(); 
+   // private final List<CustomerData> customers = new ArrayList<>(); 
+
+    //without database delete after database
+    private final List<CustomerData> customers = new ArrayList<>(Arrays.asList(new CustomerData(1, "John", "Doe", LocalDate.of(2025, 1, 1))         ,
+    new CustomerData(2, "Jane", "Doe", LocalDate.of(2025, 1, 2)),
+    new CustomerData(3, "Jim", "Beam", LocalDate.of(2025, 1, 3)),
+    new CustomerData(4, "Jack", "Daniels", LocalDate.of(2025, 1, 4)),
+    new CustomerData(5, "Johnny", "Walker", LocalDate.of(2025, 1, 5)))); 
     
     public CustomerRepositoryImpl(DBConfig config) {
         this.db = DBProvider.getDataSource(config);

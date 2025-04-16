@@ -43,6 +43,7 @@ public class CustomerManagerImpl implements CustomerManager{
     @Override
     public List<CustomerData> list(){
         return customerRepository.getAll();
+       // return customerRepository.getAll();
     }
 
 }

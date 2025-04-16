@@ -39,6 +39,9 @@ public class APIServer {
             config.router.apiBuilder(() -> {
                 crud("customers/{customer-id}", new CustomerResource(businessLogic.getCustomerManager()));
             });
+            config.router.apiBuilder(() -> {
+                crud("flights/{flight-id}", new FlightResource(businessLogic.getFlightManager()));;
+            });
         });
 
         app.exception(IllegalArgumentException.class, (e, ctx) -> {
