@@ -7,10 +7,10 @@ module restapi_module {
     requires datarecords_module;
 
     requires java.logging;
-
+    requires java.base;
+        
     requires io.javalin;
-    requires com.fasterxml.jackson.core;//copilot said to change it from requires com.fasterxml.jackson.databind;
-    requires jdk.compiler;
-
+    requires com.fasterxml.jackson.databind;
+    
     exports io.github.fontysvenlo.ais.restapi;
 }
