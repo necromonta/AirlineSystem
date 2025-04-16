@@ -37,6 +37,7 @@
 
     const createCustomer = async (e) => {
         e.preventDefault();
+        console.log(JSON.stringify(newCustomer));
         await api.create("/customers", JSON.stringify(newCustomer));
         // TODO: error handling
 

@@ -1,5 +1,7 @@
 package io.github.fontysvenlo.ais.datarecords;
 
-public record FlightData(Integer id, String origin, String destination,String flightTime) {
+import java.time.LocalDate;
+
+public record FlightData(Integer id, String origin, String destination,LocalDate departureDate) {
  }
 
