@@ -15,8 +15,5 @@ public class Flight {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getDestination'");
     }
-
-    public String getFlightID() {
-
-    }
+    
 }
