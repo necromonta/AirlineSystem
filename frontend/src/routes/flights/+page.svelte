@@ -1,57 +1,77 @@
 <script>
-    import { api } from '$lib/api';
-    import { PUBLIC_API_BASE } from '$env/static/public';
-    import {goto} from '$app/navigation'
+    import { onMount } from "svelte";
 
-    let origin = '';
-    let destination = '';
-    let flights = [];
-    let error = '';
+    let message = '';
 
-    console.log("Backend base URL:", PUBLIC_API_BASE);
-
-    async function searchFlights() {
-        error = '';
-        flights = [];
-
+    onMount(async () => {
         try {
-            const params = new URLSearchParams({ origin, destination});
-            flights = await api.all(`flights/search?${params}`);
-        } catch (e) {
-            error = e.message;
-            console.error("Error fetching flights:", e);
+            const response = await fetch('http://localhost:8080/api/v1/flights');
+            if (response.ok) {
+                message = await response.text();
+            } else {
+                message = 'Error fetching data';
+            }
+        } catch (err) {
+            message = 'Fetch error: ' + err.message;
+        }
+    });
+
+    let searchCriteria = {
+        departure: '',
+        arrival: '',
+        travelDate: ''
+    };
+
+    const searchFlights = async (e) => {
+        e.preventDefault();
+        // Your code for searching flights...
+    };
+
+    let inputMessage = '';
+    let responseMessage = '';
+
+    async function submitMessage() {
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(inputMessage),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                responseMessage = `Success: ${data.received}`;
+            } else {
+                responseMessage = 'Error sending message';
+            }
+        } catch (error) {
+            responseMessage = 'Network error: ' + error.message;
         }
     }
 </script>
 
-<h2>Search Flights</h2>
-
-<form on:submit|preventDefault={searchFlights} class="space-y-2">
-    <input bind:value={origin} placeholder="Origin" required class="p-2 border rounded w-full" />
-    <input bind:value={destination} placeholder="Destination" required class="p-2 border rounded w-full" />
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
+<form on:submit={searchFlights}>
+    <label>
+        Departure:
+        <input type="text" bind:value={searchCriteria.departure} required />
+    </label>
+    <label>
+        Arrival:
+        <input type="text" bind:value={searchCriteria.arrival} required />
+    </label>
+    <label>
+        Travel Date:
+        <input type="date" bind:value={searchCriteria.travelDate} required />
+    </label>
+    <button type="submit">Search</button>
 </form>
 
-{#if error}
-    <p class="text-red-500 mt-2">{error}</p>
-{/if}
+<h1>Send a Message {message}</h1>
+<input type="text" bind:value={inputMessage} placeholder="Type your message here" />
+<button on:click={submitMessage}>Send</button>
 
-{#if flights.length > 0}
-    <h3 class="mt-4 text-lg font-semibold">Results:</h3>
-    <ul class="mt-2 space-y-1">
-        {#each flights as flight}
-            <li class="bg-gray-100 p-2 rounded">
-                <span>
-                    <strong>{flight.flightID}</strong>: {flight.origin} → {flight.destination} at {flight.flightTime}
-                </span>
-                <button
-                        on:click={() => goto(`/flights/${flight.flightID}`)}
-                        class="ml-4 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
-                    See
-                </button>
-            </li>
-        {/each}
-    </ul>
-{:else if origin && destination}
-    <p class="mt-2">No flights found.</p>
+{#if responseMessage}
+   <p>{responseMessage}</p>
 {/if}

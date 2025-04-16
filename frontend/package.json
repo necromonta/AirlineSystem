@@ -4,7 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "node_modules\\.bin\\vite --port 5173",
+		"dev": "node_modules\\.bin\\vite dev",
 		"build": "node_modules\\.bin\\vite build",
 		"preview": "node_modules\\.bin\\vite preview",
 		"prepare": "node_modules\\.bin\\svelte-kit sync || echo ''"
