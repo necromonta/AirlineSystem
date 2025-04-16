@@ -16,4 +16,3 @@ export const api = {
     update: async (resource, slug, data, options = {}) => fetchAPI(`${resource}/${slug}`, {...options, method: 'PUT', body: data}),
     delete: async (resource, slug, options = {}) => fetchAPI(`${resource}/${slug}`, {...options, method: 'DELETE'}),
 }
-
