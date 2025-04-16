@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-4 text-center">Search Flights</h2>
+    <form id="flightSearchForm" class="space-y-4">
+        <div>
+            <label class="block text-gray-700">Origin</label>
+            <input type="text" id="origin" class="w-full p-2 border rounded" placeholder="Enter origin">
+        </div>
+        <div>
+            <label class="block text-gray-700">Destination</label>
+            <input type="text" id="destination" class="w-full p-2 border rounded" placeholder="Enter destination">
+        </div>
+        <div>
+            <label class="block text-gray-700">Date</label>
+            <input type="date" id="date" class="w-full p-2 border rounded">
+        </div>
+        <button type="button" id="searchBtn" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Search Flights</button>
+    </form>
+    <div id="results" class="mt-6 hidden">
+        <h3 class="text-lg font-semibold">Available Flights:</h3>
+        <ul id="flightResults" class="mt-2 space-y-2"></ul>
+    </div>
+</div>
+
+<script>
+    document.getElementById("searchBtn").addEventListener("click", function() {
+        let origin = document.getElementById("origin").value;
+        let destination = document.getElementById("destination").value;
+        let date = document.getElementById("date").value;
+
+        if (origin && destination && date) {
+            let results = document.getElementById("results");
+            let flightResults = document.getElementById("flightResults");
+            flightResults.innerHTML = `<li class='p-2 bg-gray-200 rounded'>Flight from ${origin} to ${destination} on ${date}</li>`;
+            results.classList.remove("hidden");
+        }
+    });
+</script>
+</body>
+</html>

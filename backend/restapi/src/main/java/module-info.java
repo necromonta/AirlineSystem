@@ -10,7 +10,7 @@ module restapi_module {
     requires java.base;
         
     requires io.javalin;
-    requires jackson.databind;
+    //requires jackson.databind;
     
     exports io.github.fontysvenlo.ais.restapi;
 }
