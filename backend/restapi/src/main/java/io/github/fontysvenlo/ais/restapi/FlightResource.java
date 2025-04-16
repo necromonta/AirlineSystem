@@ -6,6 +6,9 @@ import io.javalin.http.Context;
 import io.javalin.apibuilder.CrudHandler;
 
 import io.github.fontysvenlo.ais.datarecords.FlightData;
+
+import java.util.Map;
+
 import io.github.fontysvenlo.ais.businesslogic.api.FlightManager;
 
 /**
@@ -28,14 +31,21 @@ class FlightResource implements CrudHandler {
      */
     @Override
     public void create(Context context) {
-        FlightData FlightData = context.bodyAsClass(FlightData.class);
-        if (FlightData == null) {
-            context.status(400);
-            return;
+        try {
+            System.out.println("Request Body: " + context.body()); // Log the incoming JSON
+            FlightData flightData = context.bodyAsClass(FlightData.class);
+            if (flightData == null) {
+                context.status(400).json(Map.of("error", "Invalid flight data"));
+                return;
+            }
+            System.out.println("Flight Data: " + flightData); // Log the FlightData object
+            context.status(201).json(FlightManager.add(flightData));
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error for debugging
+            context.status(500).json(Map.of("error", "Internal server error"));
         }
-        context.status(201);
-        context.json(FlightManager.add(FlightData));
     }
+
 
     /**
      * Retrieves all Flights from the storage.
