@@ -37,7 +37,7 @@ public class Assembler {
         restServer.start(serverConfig);
     }
 
-    /**
+    /**wewsewefkvfvgedwsdfkjfhgglvimbdztitdzbtdezwwwewewewedewfedkjfhgvlitedzwffkjffvvggvedhktww
      * The main method starts the application from the properties files.
      * @param args the command line arguments
      */
