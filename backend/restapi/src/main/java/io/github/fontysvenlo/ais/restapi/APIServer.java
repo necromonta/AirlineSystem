@@ -4,7 +4,6 @@ import static io.javalin.apibuilder.ApiBuilder.crud;
 
 import io.javalin.Javalin;
 import io.github.fontysvenlo.ais.businesslogic.api.BusinessLogic;
-
 import java.util.Map;
 
 /**
@@ -50,6 +49,5 @@ public class APIServer {
         });
 
         app.start(configuration.port());
-     
     }
 }

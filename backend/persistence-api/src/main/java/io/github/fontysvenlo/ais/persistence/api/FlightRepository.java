@@ -21,6 +21,4 @@ public interface FlightRepository {
      * @return a list of all flights
      */
      List<FlightData> getAll();
-
-     Integer getCost(FlightData flightData);
 }

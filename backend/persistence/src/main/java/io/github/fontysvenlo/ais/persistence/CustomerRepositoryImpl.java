@@ -19,23 +19,17 @@ import java.util.Collections;
 class CustomerRepositoryImpl implements CustomerRepository {
     
     private final DataSource db;
-    private final List<CustomerData> customers = new ArrayList<>(Arrays.asList(new CustomerData(1, "John", "Doe", LocalDate.of(2025, 1, 1)))); 
-    //private final List<CustomerData> customers = new ArrayList<>(); 
+   // private final List<CustomerData> customers = new ArrayList<>(); 
+
+    //without database delete after database
+    private final List<CustomerData> customers = new ArrayList<>(Arrays.asList(new CustomerData(1, "John", "Doe", LocalDate.of(2025, 1, 1))         ,
+    new CustomerData(2, "Jane", "Doe", LocalDate.of(2025, 1, 2)),
+    new CustomerData(3, "Jim", "Beam", LocalDate.of(2025, 1, 3)),
+    new CustomerData(4, "Jack", "Daniels", LocalDate.of(2025, 1, 4)),
+    new CustomerData(5, "Johnny", "Walker", LocalDate.of(2025, 1, 5)))); 
     
-    /* public CustomerRepositoryImpl(DBConfig config) {
-        this.db = DBProvider.getDataSource(config);
-    } */
     public CustomerRepositoryImpl(DBConfig config) {
         this.db = DBProvider.getDataSource(config);
-        
-        
-        // Print database connection details for debugging
-        try (var connection = db.getConnection()) {
-            System.out.println("Connected to database: " + connection.getMetaData().getURL());
-            System.out.println("Database user: " + connection.getMetaData().getUserName());
-        } catch (Exception e) {
-            System.err.println("Database connection failed: " + e.getMessage());
-        }
     }
 
     /**
@@ -55,29 +49,8 @@ class CustomerRepositoryImpl implements CustomerRepository {
      */
     @Override
     public List<CustomerData> getAll() {
-    List<CustomerData> customers = new ArrayList<>();
-     String query = "SELECT id, first_name, last_name, date_of_birth FROM customers";
-    
-    try (var connection = db.getConnection();
-        var statement = connection.prepareStatement(query);
-         var resultSet = statement.executeQuery()) {
-
-        while (resultSet.next()) {
-            customers.add(new CustomerData(
-                resultSet.getInt("id"),
-                resultSet.getString("first_name"),
-                resultSet.getString("last_name"),
-                resultSet.getDate("date_of_birth").toLocalDate()
-            ));
-         }
-     } catch (Exception e) {
-         e.printStackTrace(); // Handle errors properly in production
-     }
-    
-     return customers;
- }
-
-//        return Collections.unmodifiableList(customers);
-
+        // TODO: Implement the actual database storage
+        // For now, return a dummy list
+        return Collections.unmodifiableList(customers);
     }
-
+}

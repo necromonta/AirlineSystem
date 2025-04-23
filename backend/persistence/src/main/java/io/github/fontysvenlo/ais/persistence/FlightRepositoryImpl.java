@@ -7,7 +7,6 @@ import io.github.fontysvenlo.ais.persistence.api.FlightRepository;
 import java.util.List;
 import javax.sql.DataSource;
 
-import io.github.fontysvenlo.ais.datarecords.AccountManagerData;
 import io.github.fontysvenlo.ais.datarecords.CustomerData;
 import io.github.fontysvenlo.ais.datarecords.FlightData;
 
@@ -28,11 +27,11 @@ class FlightRepositoryImpl implements FlightRepository {
     
     private final DataSource db;
     private final List<FlightData> flights = new ArrayList<>(Arrays.asList(
-            new FlightData(1, "Budapest", "Eindhoven", LocalDate.of(2025, 1, 2), 230),
-            new FlightData(2, "Amsterdam", "Eindhoven", LocalDate.of(2004, 3, 2), 120),
-            new FlightData(3, "Eindhoven", "Budapest", LocalDate.of(2004, 3, 3), 230),
-            new FlightData(4, "Eindhoven", "Amsterdam", LocalDate.of(2004, 3, 4), 120),
-            new FlightData(5, "Budapest", "Amsterdam", LocalDate.of(2004, 3, 5), 250)
+            new FlightData(1, "Budapest", "Eindhoven", LocalDate.of(2025, 1, 2),100),
+            new FlightData(2, "Amsterdam", "Eindhoven", LocalDate.of(2004, 3, 2),200),
+            new FlightData(3, "Eindhoven", "Budapest", LocalDate.of(2004, 3, 3),300),
+            new FlightData(4, "Eindhoven", "Amsterdam", LocalDate.of(2004, 3, 4),400),
+            new FlightData(5, "Budapest", "Amsterdam", LocalDate.of(2004, 3, 5),500)
     ));
     //private final List<FlightData> flights = new ArrayList<>(); 
     
@@ -61,13 +60,6 @@ class FlightRepositoryImpl implements FlightRepository {
         // For now, return a dummy list
         return Collections.unmodifiableList(flights);
     }
-
-    @Override
-    public Integer getCost(FlightData flightData) {
-        return flightData.distance()*2;
-    }
-
-    
 
   
   
