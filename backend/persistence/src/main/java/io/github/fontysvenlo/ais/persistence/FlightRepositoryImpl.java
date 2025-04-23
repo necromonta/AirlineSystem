@@ -26,14 +26,8 @@ import io.github.fontysvenlo.ais.persistence.api.FlightRepository;
 class FlightRepositoryImpl implements FlightRepository {
     
     private final DataSource db;
-    private final List<FlightData> flights = new ArrayList<>(Arrays.asList(
-            new FlightData(1, "Budapest", "Eindhoven", LocalDate.of(2025, 1, 2),100),
-            new FlightData(2, "Amsterdam", "Eindhoven", LocalDate.of(2004, 3, 2),200),
-            new FlightData(3, "Eindhoven", "Budapest", LocalDate.of(2004, 3, 3),300),
-            new FlightData(4, "Eindhoven", "Amsterdam", LocalDate.of(2004, 3, 4),400),
-            new FlightData(5, "Budapest", "Amsterdam", LocalDate.of(2004, 3, 5),500)
-    ));
-    //private final List<FlightData> flights = new ArrayList<>(); 
+    private final List<FlightData> flights = new ArrayList<>();
+  
     
     public FlightRepositoryImpl(DBConfig config) {
         this.db = DBProvider.getDataSource(config);
@@ -56,10 +50,28 @@ class FlightRepositoryImpl implements FlightRepository {
      */
     @Override
     public List<FlightData> getAll() {
-        // TODO: Implement the actual database storage
-        // For now, return a dummy list
-        return Collections.unmodifiableList(flights);
-    }
+        List<FlightData> flights = new ArrayList<>();
+      String query = "SELECT id, origin, destination, flight_date ,distance FROM flights";
+     
+     try (var connection = db.getConnection();
+         var statement = connection.prepareStatement(query);
+          var resultSet = statement.executeQuery()) {
+ 
+         while (resultSet.next()) {
+             flights.add(new FlightData(
+                 resultSet.getInt("id"),
+                 resultSet.getString("origin"),
+                 resultSet.getString("destination"),
+                 resultSet.getDate("flight_date").toLocalDate(),
+                 resultSet.getInt("distance")
+             ));
+          }
+      } catch (Exception e) {
+          e.printStackTrace(); // Handle errors properly in production
+      }
+     
+      return flights;
+  }
 
   
   
